@@ -2,33 +2,36 @@ name: Makefile CI
 
 on:
   push:
-    branches: [ "master", "dermatest" ]
+    branches: ["master", "dermatest"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Install reuirements
-      run: |
-        sudo apt-get install -y python3 python3-pip
-        sudo python3 -m pip install --upgrade pip
-        sudo pip3 install -r requirements.txt
-        sudo pip3 install -r requirements-dev.txt
-        sudo pip3 install -r requirements-test.txt
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-    - name: Build and install package
-      run: |
-        make build
-        make install
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pip install -r requirements-test.txt
 
-    - name: Run tests
-      run: make test
+      - name: Build and install package
+        run: |
+          make build
+          make install
 
-    - name: Build wheel
-      run: make wheel
+      - name: Run tests
+        run: make test
+
+      - name: Build wheel
+        run: make wheel
